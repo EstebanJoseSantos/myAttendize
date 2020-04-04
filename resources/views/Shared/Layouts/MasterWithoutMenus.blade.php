@@ -12,7 +12,7 @@
         <!--/JS-->
 
         <!--Style-->
-       {!!HTML::style('assets/stylesheet/application.css')!!}
+       {!!HTML::style('assets/dist/css/application.css')!!}
         <!--/Style-->
 
         @yield('head')
@@ -76,7 +76,7 @@
         </div>
 
         @include("Shared.Partials.LangScript")
-        {!!HTML::script('assets/javascript/backend.js')!!}
+        {!!HTML::script('assets/dist/js/backend.js')!!}
     </body>
     @include('Shared.Partials.GlobalFooterJS')
 </html>

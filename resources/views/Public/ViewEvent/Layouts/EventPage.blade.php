@@ -34,7 +34,7 @@
         <![endif]-->
         @yield('head')
 
-       {!!HTML::style(config('attendize.cdn_url_static_assets').'/assets/stylesheet/frontend.css')!!}
+       {!!HTML::style(config('attendize.cdn_url_static_assets').'/assets/dist/css/frontend.css')!!}
 
         <!--Bootstrap placeholder fix-->
         <style>
@@ -91,7 +91,7 @@
             <span style="font-size:11px;">@lang("basic.TOP")</span></a>
 
         @include("Shared.Partials.LangScript")
-        {!!HTML::script(config('attendize.cdn_url_static_assets').'/assets/javascript/frontend.js')!!}
+        {!!HTML::script(config('attendize.cdn_url_static_assets').'/assets/dist/js/frontend.js')!!}
 
 
         @if(isset($secondsToExpire))

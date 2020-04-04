@@ -34,7 +34,7 @@
         <![endif]-->
         @yield('head')
 
-       {!!HTML::style('assets/stylesheet/frontend.css')!!}
+       {!!HTML::style('assets/dist/css/frontend.css')!!}
 
         <!--Bootstrap placeholder fix-->
         <style>
@@ -71,7 +71,7 @@
         @yield('content')
 
         @include("Shared.Partials.LangScript")
-        {!!HTML::script('assets/javascript/frontend.js')!!}
+        {!!HTML::script('assets/dist/js/frontend.js')!!}
 
         @if(isset($secondsToExpire))
         <script>

@@ -5,7 +5,7 @@
         </title>
 
         <!--Style-->
-       {!!HTML::style('assets/stylesheet/application.css')!!}
+       {!!HTML::style('assets/dist/css/application.css')!!}
         <!--/Style-->
 
         <style type="text/css">

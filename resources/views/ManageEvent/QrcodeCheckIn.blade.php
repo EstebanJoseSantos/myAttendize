@@ -5,8 +5,8 @@
       @lang("ManageEvent.attendize_qrcode_check_in"): {{ $event->title }}
   </title>
 
-    {!! HTML::style('assets/stylesheet/application.css') !!}
-    {!! HTML::style('assets/stylesheet/qrcode-check-in.css') !!}
+    {!! HTML::style('assets/dist/css/application.css') !!}
+    {!! HTML::style('assets/dist/css/qrcode-check-in.css') !!}
   {!! HTML::script('vendor/jquery/jquery.js') !!}
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">

@@ -1,4 +1,4 @@
-{!! HTML::style(asset('assets/stylesheet/ticket.css')) !!}
+{!! HTML::style(asset('assets/dist/css/ticket.css')) !!}
 <style>
     .ticket {
         border: 1px solid {{$event->ticket_border_color}};

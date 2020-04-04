@@ -8,8 +8,8 @@
     {!! HTML::script('vendor/vue/dist/vue.min.js') !!}
     {!! HTML::script('vendor/vue-resource/dist/vue-resource.min.js') !!}
 
-    {!! HTML::style('assets/stylesheet/application.css') !!}
-    {!! HTML::style('assets/stylesheet/check_in.css') !!}
+    {!! HTML::style('assets/dist/css/application.css') !!}
+    {!! HTML::style('assets/dist/css/check_in.css') !!}
     {!! HTML::script('vendor/jquery/dist/jquery.min.js') !!}
 
     @include('Shared/Layouts/ViewJavascript')
@@ -162,6 +162,6 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
 
 @include("Shared.Partials.LangScript")
 {!! HTML::script('vendor/qrcode-scan/llqrcode.js') !!}
-{!! HTML::script('assets/javascript/check_in.js') !!}
+{!! HTML::script('assets/dist/js/check_in.js') !!}
 </body>
 </html>
