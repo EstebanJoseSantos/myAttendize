@@ -30,6 +30,7 @@
     width: 100%;
     background-color: $attendize-base-color;
     height: $header-height;
+    padding:0;
     border-width: 0px;
     border-radius: 0px;
     margin: 0px;
@@ -44,6 +45,7 @@
         > .navbar-brand {
             display: block;
             width: 100%;
+            margin:0;
             padding: 0px 15px;
             line-height: $header-height - 1;
             height: $header-height;

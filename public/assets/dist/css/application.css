@@ -14670,6 +14670,7 @@ body {
   width: 100%;
   background-color: #2E3254;
   height: 55px;
+  padding: 0;
   border-width: 0px;
   border-radius: 0px;
   margin: 0px;
@@ -14690,6 +14691,7 @@ body {
 #header.navbar > .navbar-header > .navbar-brand {
   display: block;
   width: 100%;
+  margin: 0;
   padding: 0px 15px;
   line-height: 54px;
   height: 55px;
@@ -15587,7 +15589,7 @@ body {
   }
 }
 
-#header.navbar ~ #main {
+#header .navbar ~ #main {
   padding-top: 55px;
 }
 
