@@ -121,7 +121,7 @@
                     {!! Form::label('start_date', trans("Event.event_start_date"), array('class'=>'required control-label')) !!}
                     {!!  Form::text('start_date', $event->getFormattedDate('start_date'),
                                                         [
-                                                    'class'=>'form-control start hasDatepicker ',
+                                                    'class'=>'form-control start jqDatePicker',
                                                     'data-field'=>'datetime',
                                                     'data-startend'=>'start',
                                                     'data-startendelem'=>'.end',
@@ -139,7 +139,7 @@
                                 ])  !!}
                     {!!  Form::text('end_date', $event->getFormattedDate('end_date'),
                                                 [
-                                            'class'=>'form-control end hasDatepicker ',
+                                            'class'=>'form-control end jqDatePicker ',
                                             'data-field'=>'datetime',
                                             'data-startend'=>'end',
                                             'data-startendelem'=>'.start',
@@ -213,3 +213,6 @@
     {!! Form::close() !!}
 </div>
 
+<script>
+    jQuery('.jqDatePicker').datetimepicker();
+</script>

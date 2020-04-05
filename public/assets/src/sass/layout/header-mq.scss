@@ -46,9 +46,11 @@
         // -----------------------------------
         > .navbar-toolbar {
             position: relative;
-            margin-left: $sidebar-width;
             height: $header-height-md;
-
+            display:flex;
+            flex-grow:1;
+            align-items:center;
+            justify-content:space-between;
 
             // Navbar nav
             // -----------------------------------
@@ -156,7 +158,6 @@
                 background-color: $attendize-base-color;
                 border-bottom: 1px solid darken($attendize-base-color, 3%);
                 height: $header-height-md;
-                float: left;
 
                 // Navbar brand
                 // -----------------------------------

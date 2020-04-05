@@ -1,4 +1,7 @@
-import 'bootstrap';
-global.$ = global.jQuery = require("jquery");
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+global.$ = global.jQuery = $;
 
-require('./attendize.js');
+import 'bootstrap';
+import 'popper.js';
+import 'webpack-jquery-ui';

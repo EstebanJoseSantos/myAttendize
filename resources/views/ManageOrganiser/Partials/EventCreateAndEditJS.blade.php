@@ -1,6 +1,5 @@
-{!! HTML::script('vendor/simplemde/dist/simplemde.min.js') !!}
-{!! HTML::style('vendor/simplemde/dist/simplemde.min.css') !!}
-
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 <script>
     $(function() {
         try {
@@ -16,21 +15,20 @@
         }
 
         $('.editable').each(function() {
-            var simplemde = new SimpleMDE({
+            var easyMDE = new EasyMDE({
                 element: this,
                 spellChecker: false,
                 status: false
             });
-            simplemde.render();
         })
 
-        $("#DatePicker").remove();
-        var $div = $("<div>", {id: "DatePicker"});
-        $("body").append($div);
-        $div.DateTimePicker({
-            dateTimeFormat: window.Attendize.DateTimeFormat,
-            dateSeparator: window.Attendize.DateSeparator
-        });
+        // $("#DatePicker").remove();
+        // var $div = $("<div>", {id: "DatePicker"});
+        // $("body").append($div);
+        // $div.DateTimePicker({
+        //     dateTimeFormat: window.Attendize.DateTimeFormat,
+        //     dateSeparator: window.Attendize.DateSeparator
+        // });
 
     });
 </script>

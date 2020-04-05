@@ -78,7 +78,6 @@
         // -----------------------------------
         > .navbar-nav {
             margin: 0px;
-            float: left;
 
             > li {
                 float: left;
@@ -356,7 +355,6 @@
             // Navbar toolbar - navbar nav right
             // -----------------------------------
             &.navbar-right {
-                float: right;
 
                 > .navbar-main {
                     left: auto;

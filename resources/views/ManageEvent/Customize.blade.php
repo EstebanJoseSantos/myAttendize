@@ -154,17 +154,16 @@
             var hash = document.location.hash;
             var prefix = "tab_";
             if (hash) {
-                $('.nav-tabs a[href=' + hash + ']').tab('show');
+                $('.nav-tabs a[href="' + hash + '"]').tab('show');
             }
 
             $(window).on('hashchange', function () {
                 var newHash = location.hash;
                 if (typeof newHash === undefined) {
-                    $('.nav-tabs a[href=' + '#general' + ']').tab('show');
+                    $('.nav-tabs a[href="' + '#general' + '"]').tab('show');
                 } else {
-                    $('.nav-tabs a[href=' + newHash + ']').tab('show');
+                    $('.nav-tabs a[href="' + newHash + ']"').tab('show');
                 }
-
             });
 
             $('.nav-tabs a').on('shown.bs.tab', function (e) {
@@ -184,27 +183,25 @@
         <div class="col-md-12">
             <!-- tab -->
             <ul class="nav nav-tabs">
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'general'])}}"
-                    class="{{($tab == 'general' || !$tab) ? 'active' : ''}}"><a href="#general" data-toggle="tab">@lang("basic.general")</a>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'general'])}}" class="nav-item">
+                    <a class="nav-link {{($tab == 'general' || !$tab) ? 'active' : ''}}" href="#general" data-toggle="tab">@lang("basic.general")</a>
                 </li>
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'design'])}}"
-                    class="{{$tab == 'design' ? 'active' : ''}}"><a href="#design" data-toggle="tab">@lang("basic.event_page_design")</a></li>
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'order_page'])}}"
-                    class="{{$tab == 'order_page' ? 'active' : ''}}"><a href="#order_page" data-toggle="tab">@lang("basic.order_form")</a></li>
-
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'social'])}}"
-                    class="{{$tab == 'social' ? 'active' : ''}}"><a href="#social" data-toggle="tab">@lang("basic.social")</a></li>
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'affiliates'])}}"
-                    class="{{$tab == 'affiliates' ? 'active' : ''}}"><a href="#affiliates"
-                                                                        data-toggle="tab">@lang("basic.affiliates")</a></li>
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'fees'])}}"
-                    class="{{$tab == 'fees' ? 'active' : ''}}"><a href="#fees" data-toggle="tab">@lang("basic.service_fees")</a></li>
-                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'ticket_design'])}}"
-                    class="{{$tab == 'ticket_design' ? 'active' : ''}}"><a href="#ticket_design" data-toggle="tab">@lang("basic.ticket_design")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'design'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'design' ? 'active' : ''}}" href="#design" data-toggle="tab">@lang("basic.event_page_design")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'order_page'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'order_page' ? 'active' : ''}}" href="#order_page" data-toggle="tab">@lang("basic.order_form")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'social'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'social' ? 'active' : ''}}" href="#social" data-toggle="tab">@lang("basic.social")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'affiliates'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'affiliates' ? 'active' : ''}}" href="#affiliates" data-toggle="tab">@lang("basic.affiliates")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'fees'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'fees' ? 'active' : ''}}" href="#fees" data-toggle="tab">@lang("basic.service_fees")</a></li>
+                <li data-route="{{route('showEventCustomizeTab', ['event_id' => $event->id, 'tab' => 'ticket_design'])}}" class="nav-item">
+                    <a class="nav-link {{$tab == 'ticket_design' ? 'active' : ''}}" href="#ticket_design" data-toggle="tab">@lang("basic.ticket_design")</a></li>
             </ul>
             <!--/ tab -->
             <!-- tab content -->
-            <div class="tab-content panel">
+            <div class="tab-content panel card">
                 <div class="tab-pane {{($tab == 'general' || !$tab) ? 'active' : ''}}" id="general">
                     @include('ManageEvent.Partials.EditEventForm', ['event'=>$event, 'organisers'=>\Auth::user()->account->organisers])
                 </div>

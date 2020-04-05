@@ -7,16 +7,15 @@ $(function () {
      */
 
     /* Datepicker */
-    $(document).ajaxComplete(function () {
-        $('#DatePicker').remove();
-        var $div = $("<div>", {id: "DatePicker"});
-        $("body").append($div);
-        $div.DateTimePicker({
-            dateTimeFormat: Attendize.DateTimeFormat,
-            dateSeparator: Attendize.DateSeparator
-        });
-
-    });
+    // $(document).ajaxComplete(function () {
+    //         $('#DatePicker').remove();
+    //         var $div = $("<div>", {id: "DatePicker"});
+    //         $("body").append($div);
+    //         $div.DateTimePicker({
+    //             dateTimeFormat: Attendize.DateTimeFormat,
+    //             dateSeparator: Attendize.DateSeparator
+    //         });
+    // });
 
     /* Responsive sidebar */
     $(document.body).on('click', '.toggleSidebar', function (e) {

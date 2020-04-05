@@ -28,10 +28,9 @@
         @endif
         <meta property="og:description" content="{{Str::words(strip_tags(Markdown::parse($event->description))), 20}}" />
         <meta property="og:site_name" content="Attendize.com" />
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+        {!! HTML::script('assets/dist/js/app.js') !!}
+        {!!HTML::script(config('attendize.cdn_url_static_assets').'/assets/dist/js/frontend.js')!!}
+
         @yield('head')
 
        {!!HTML::style(config('attendize.cdn_url_static_assets').'/assets/dist/css/frontend.css')!!}
@@ -91,8 +90,6 @@
             <span style="font-size:11px;">@lang("basic.TOP")</span></a>
 
         @include("Shared.Partials.LangScript")
-        {!!HTML::script(config('attendize.cdn_url_static_assets').'/assets/dist/js/frontend.js')!!}
-
 
         @if(isset($secondsToExpire))
         <script>if($('#countdown')) {setCountdown($('#countdown'), {{$secondsToExpire}});}</script>

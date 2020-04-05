@@ -112,7 +112,7 @@
     top: 0px;
     bottom: 0px;
 
-    background-image:linear-gradient(to bottom,  fade(darken($maincontent-base-color, 7%), 20%) 0%,darken($maincontent-base-color, 7%) 50%,fade(darken($maincontent-base-color, 7%), 20%) 100%);
+    //background-image:linear-gradient(to bottom,  rgba(darken($maincontent-base-color, 7%), 20%) 0%), darken($maincontent-base-color, 7%) 50%,fade(darken($maincontent-base-color, 7%), 20%) 100%);
 }
 .nav-section > li:last-child > a:after,
 .nav-section > li:last-child > .section:after {

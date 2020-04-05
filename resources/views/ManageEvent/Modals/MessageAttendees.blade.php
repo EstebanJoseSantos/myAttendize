@@ -10,8 +10,8 @@
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#new_message" data-toggle="tab">@lang("Message.new_message")</a></li>
-                    <li><a href="#sent_messages" data-toggle="tab">@lang("Message.sent_messages")</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="#new_message" data-toggle="tab">@lang("Message.new_message")</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sent_messages" data-toggle="tab">@lang("Message.sent_messages")</a></li>
                 </ul>
 
                 <div class="tab-content panel">

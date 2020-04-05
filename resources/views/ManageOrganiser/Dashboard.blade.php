@@ -23,7 +23,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js" integrity="sha256-0rg2VtfJo3VUij/UY9X0HJP7NET6tgAY98aMOfwP0P8=" crossorigin="anonymous"></script>
 
     {!! HTML::script('https://maps.googleapis.com/maps/api/js?libraries=places&key='.config("attendize.google_maps_geocoding_key")) !!}
-    {!! HTML::script('vendor/geocomplete/jquery.geocomplete.min.js')!!}
     {!! HTML::script('vendor/moment/moment.js')!!}
     {!! HTML::script('vendor/fullcalendar/dist/fullcalendar.min.js')!!}
     <?php

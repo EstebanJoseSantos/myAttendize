@@ -1,0 +1,1 @@
+{{-- DO NOT REMOVE - JS gets injected here --}}

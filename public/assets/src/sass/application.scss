@@ -24,10 +24,10 @@
 @import "ui/scrollbar";
 @import "ui/modal";
 
-//@import (inline) "../../vendor/RRSSB/css/rrssb.css";
-//@import (inline) "../../vendor/humane-js/themes/flatty.css";
-//@import (inline) "../../vendor/datetimepicker/dist/DateTimePicker.min.css";
-//@import (inline) "../../vendor/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css";
-//@import (inline) "../../vendor/jquery-minicolors/jquery.minicolors.css";
+@import "~humane-js/themes/flatty.css";
+@import "~jquery-minicolors/jquery.minicolors.css";
+@import "~rrssb/css/rrssb.css";
+@import "~jquery-datetimepicker/build/jquery.datetimepicker.min.css";
+@import "~bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css";
 
 @import "custom";

@@ -30,10 +30,10 @@
                     <div class="col-md-12">
                         <!-- tab -->
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#general_account" data-toggle="tab">@lang("ManageAccount.general")</a></li>
-                            <li><a href="#payment_account" data-toggle="tab">@lang("ManageAccount.payment")</a></li>
-                            <li><a href="#users_account" data-toggle="tab">@lang("ManageAccount.users")</a></li>
-                            <li><a href="#about" data-toggle="tab">@lang("ManageAccount.about")</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="#general_account" data-toggle="tab">@lang("ManageAccount.general")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#payment_account" data-toggle="tab">@lang("ManageAccount.payment")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#users_account" data-toggle="tab">@lang("ManageAccount.users")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#about" data-toggle="tab">@lang("ManageAccount.about")</a></li>
                         </ul>
                         <div class="tab-content panel">
                             <div class="tab-pane active" id="general_account">
