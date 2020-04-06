@@ -3,6 +3,22 @@ let assets = 'public/assets/';
 Mix.manifest.refresh = _ => void 0;
 
 mix
+    .webpackConfig({
+        module: {
+            rules: [
+                {
+                    test: /\.m?js$/,
+                    exclude: /(node_modules|bower_components)/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-env']
+                        }
+                    }
+                }
+            ]
+        }
+    })
     .copyDirectory(
         assets + "src/sass/icons/",
         assets + "dist/css/icons"
@@ -14,18 +30,3 @@ mix
     .options({
         processCssUrls: false
     });
-
-module: {
-    rules: [
-        {
-            test: /\.m?js$/,
-            exclude: /(node_modules|bower_components)/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['@babel/preset-env']
-                }
-            }
-        }
-    ]
-}

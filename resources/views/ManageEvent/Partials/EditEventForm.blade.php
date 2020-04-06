@@ -214,5 +214,8 @@
 </div>
 
 <script>
-    jQuery('.jqDatePicker').datetimepicker();
+    jQuery('.jqDatePicker').datetimepicker({
+        // format:Attendize.DateTimeFormat
+        format:'Y-m-d H:i',
+    });
 </script>
