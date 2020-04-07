@@ -211,7 +211,7 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('mail_driver', trans("Installer.mail_from_address"), array('class'=>' control-label required')) !!}
-                        {!!  Form::text('mail_driver', $value = env("MAIL_DRIVER"),
+                        {!!  Form::text('mail_driver', $value = env("MAIL_MAILER"),
                                     array(
                                     'class'=>'form-control ',
                                     'placeholder' => 'mail'
