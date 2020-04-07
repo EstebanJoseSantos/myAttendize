@@ -1,23 +1,21 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAttendeesQuestions extends Migration
 {
     /**
      * Run the migrations.
      *
-     * @access public
      * @return void
      */
     public function up()
     {
-        /**
+        /*
          * Checkbox, dropdown, radio, text etc.
          */
-        Schema::create('question_types', function (Blueprint $table)
-        {
+        Schema::create('question_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('alias');
             $table->string('name');
@@ -25,11 +23,10 @@ class CreateAttendeesQuestions extends Migration
             $table->boolean('allow_multiple')->default(false);
         });
 
-        /**
+        /*
          * The questions.
          */
-        Schema::create('questions', function (Blueprint $table)
-        {
+        Schema::create('questions', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('title', 255);
@@ -47,11 +44,10 @@ class CreateAttendeesQuestions extends Migration
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
 
-        /**
+        /*
          * Used for the questions that allow options (checkbox, radio, dropdown).
          */
-        Schema::create('question_options', function (Blueprint $table)
-        {
+        Schema::create('question_options', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('question_id')->unsigned()->index();
@@ -59,11 +55,10 @@ class CreateAttendeesQuestions extends Migration
             $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
 
-        /**
+        /*
          * Event / Question pivot table.
          */
-        Schema::create('event_question', function(Blueprint $table)
-        {
+        Schema::create('event_question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('event_id')->unsigned()->index();
             $table->integer('question_id')->unsigned()->index();
@@ -72,11 +67,10 @@ class CreateAttendeesQuestions extends Migration
             $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
 
-        /**
+        /*
          * Question / Ticket pivot table.
          */
-        Schema::create('question_ticket', function (Blueprint $table)
-        {
+        Schema::create('question_ticket', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id')->unsigned()->index();
             $table->integer('ticket_id')->unsigned()->index();
@@ -89,7 +83,6 @@ class CreateAttendeesQuestions extends Migration
     /**
      * Reverse the migrations.
      *
-     * @access public
      * @return void
      */
     public function down()

@@ -11,9 +11,8 @@ use Illuminate\Http\Request;
 
 class EventWidgetsController extends MyBaseController
 {
-
     /**
-     * Show the event widgets page
+     * Show the event widgets page.
      *
      * @param Request $request
      * @param $event_id
@@ -29,6 +28,4 @@ class EventWidgetsController extends MyBaseController
 
         return view('ManageEvent.Widgets', $data);
     }
-
-
 }

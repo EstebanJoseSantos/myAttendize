@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 class ImageController extends Controller
 {
-
     /**
-     * Generate a thumbnail for a given image
+     * Generate a thumbnail for a given image.
      *
      * @param $image_src
      * @param bool $width

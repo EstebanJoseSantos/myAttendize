@@ -9,7 +9,6 @@ use View;
 
 class UserLoginController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('guest');

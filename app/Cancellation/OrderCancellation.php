@@ -1,4 +1,6 @@
-<?php namespace App\Cancellation;
+<?php
+
+namespace App\Cancellation;
 
 use App\Models\Attendee;
 use App\Models\Order;
@@ -26,19 +28,19 @@ class OrderCancellation
     }
 
     /**
-     * Create a new instance to be used statically
+     * Create a new instance to be used statically.
      *
      * @param Order $order
      * @param $attendees
      * @return OrderCancellation
      */
-    public static function make(Order $order, $attendees): OrderCancellation
+    public static function make(Order $order, $attendees): self
     {
         return new static($order, $attendees);
     }
 
     /**
-     * Cancels an order
+     * Cancels an order.
      *
      * @throws OrderRefundException
      */
@@ -51,7 +53,7 @@ class OrderCancellation
             $orderCancel->cancel();
         }
         // If order can do a refund then refund first
-        if ($this->order->canRefund() && !$orderAwaitingPayment) {
+        if ($this->order->canRefund() && ! $orderAwaitingPayment) {
             $orderRefund = OrderRefund::make($this->order, $this->attendees);
             $orderRefund->refund();
             $this->orderRefund = $orderRefund;
@@ -65,7 +67,7 @@ class OrderCancellation
     }
 
     /**
-     * Returns the return amount
+     * Returns the return amount.
      *
      * @return Money
      */
@@ -74,6 +76,7 @@ class OrderCancellation
         if ($this->orderRefund === null) {
             return new Money('0');
         }
+
         return $this->orderRefund->getRefundAmount();
     }
 }

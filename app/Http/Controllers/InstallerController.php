@@ -9,18 +9,18 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
-use PhpSpec\Exception\Example\ExampleException;
 use Log;
+use PhpSpec\Exception\Example\ExampleException;
 
 class InstallerController extends Controller
 {
-
     private $data;
 
     /**
      * InstallerController constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         /*
          * Path we need to make sure are writable
          */
@@ -59,13 +59,13 @@ class InstallerController extends Controller
     }
 
     /**
-     * Show the application installer
+     * Show the application installer.
      *
      * @return mixed
      */
     public function showInstaller()
     {
-        /**
+        /*
          * If we're already installed display user friendly message and direct them to the appropriate next steps.
          *
          * @todo Check if DB is installed etc.
@@ -76,12 +76,11 @@ class InstallerController extends Controller
             return view('Installer.AlreadyInstalled', $this->data);
         }
 
-
         return view('Installer.Installer', $this->data);
     }
 
     /**
-     * Attempts to install the system
+     * Attempts to install the system.
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|array
@@ -106,26 +105,25 @@ class InstallerController extends Controller
                 'database_host' => 'required',
                 'database_name' => 'required',
                 'database_username' => 'required',
-                'database_password' => 'required'
+                'database_password' => 'required',
             ]);
             $connectionDetailsValid = true;
         } catch (\Exception $e) {
-            Log::error('Please enter all app settings. ' . $e->getMessage());
+            Log::error('Please enter all app settings. '.$e->getMessage());
             $connectionDetailsValid = false;
         }
 
-        if (!$connectionDetailsValid) {
-
+        if (! $connectionDetailsValid) {
             if ($request->get('test') === 'db') {
                 return [
                     'status'  => 'error',
-                    'message' => trans("Installer.connection_failure"),
+                    'message' => trans('Installer.connection_failure'),
                     'test'    => 1,
                 ];
             }
+
             return view('Installer.Installer', $this->data);
         }
-
 
         $mail['driver'] = $request->get('mail_driver');
         $mail['port'] = $request->get('mail_port');
@@ -145,14 +143,14 @@ class InstallerController extends Controller
             if ($db_valid) {
                 return [
                     'status'  => 'success',
-                    'message' => trans("Installer.connection_success"),
+                    'message' => trans('Installer.connection_success'),
                     'test'    => 1,
                 ];
             }
 
             return response()->json([
                 'status'  => 'error',
-                'message' => trans("Installer.connection_failure"),
+                'message' => trans('Installer.connection_failure'),
                 'test'    => 1,
             ]);
         }
@@ -161,55 +159,58 @@ class InstallerController extends Controller
         //the installation fails miserably. Rather check if the database connection details are valid and fail
         //gracefully
         $db_valid = self::testDatabase($database);
-        if (!$db_valid) {
+        if (! $db_valid) {
             return view('Installer.Installer', $this->data)->withErrors(
                 new MessageBag(['Database connection failed. Please check the details you have entered and try again.']));
         }
 
-
-        $config_string = file_get_contents(base_path() . '/.env.example');
+        $config_string = file_get_contents(base_path().'/.env.example');
         $config_temp = explode("\n", $config_string);
-        foreach($config_temp as $key=>$row)
-            $config_temp[$key] = explode("=", $row, 2);
+        foreach ($config_temp as $key=>$row) {
+            $config_temp[$key] = explode('=', $row, 2);
+        }
         $config = [
-            "APP_ENV" => "production",
-            "APP_DEBUG" => "false",
-            "APP_URL" => $app_url,
-            "APP_KEY" => $app_key,
-            "DB_TYPE" => $database['type'],
-            "DB_HOST" => $database['host'],
-            "DB_DATABASE" => $database['name'],
-            "DB_USERNAME" => $database['username'],
-            "DB_PASSWORD" => $database['password'],
-            "MAIL_DRIVER" => $mail['driver'],
-            "MAIL_PORT" => $mail['port'],
-            "MAIL_ENCRYPTION" => $mail['encryption'],
-            "MAIL_HOST" => $mail['host'],
-            "MAIL_USERNAME" => $mail['username'],
-            "MAIL_FROM_NAME" => $mail['from_name'],
-            "MAIL_FROM_ADDRESS" => $mail['from_address'],
-            "MAIL_PASSWORD" => $mail['password'],
+            'APP_ENV' => 'production',
+            'APP_DEBUG' => 'false',
+            'APP_URL' => $app_url,
+            'APP_KEY' => $app_key,
+            'DB_TYPE' => $database['type'],
+            'DB_HOST' => $database['host'],
+            'DB_DATABASE' => $database['name'],
+            'DB_USERNAME' => $database['username'],
+            'DB_PASSWORD' => $database['password'],
+            'MAIL_DRIVER' => $mail['driver'],
+            'MAIL_PORT' => $mail['port'],
+            'MAIL_ENCRYPTION' => $mail['encryption'],
+            'MAIL_HOST' => $mail['host'],
+            'MAIL_USERNAME' => $mail['username'],
+            'MAIL_FROM_NAME' => $mail['from_name'],
+            'MAIL_FROM_ADDRESS' => $mail['from_address'],
+            'MAIL_PASSWORD' => $mail['password'],
         ];
 
-        foreach($config as $key => $val) {
+        foreach ($config as $key => $val) {
             $set = false;
-            foreach($config_temp as $rownum=>$row) {
-                if($row[0]==$key) {
+            foreach ($config_temp as $rownum=>$row) {
+                if ($row[0] == $key) {
                     $config_temp[$rownum][1] = $val;
                     $set = true;
                 }
             }
-            if(!$set)
+            if (! $set) {
                 $config_temp[] = [$key, $val];
+            }
         }
-        $config_string = "";
-        foreach($config_temp as $row)
-            if(count($row)>1)
-                $config_string .= implode("=", $row)."\n";
-            else
-                $config_string .= implode("", $row)."\n";
+        $config_string = '';
+        foreach ($config_temp as $row) {
+            if (count($row) > 1) {
+                $config_string .= implode('=', $row)."\n";
+            } else {
+                $config_string .= implode('', $row)."\n";
+            }
+        }
 
-        $fp = fopen(base_path() . '/.env', 'w');
+        $fp = fopen(base_path().'/.env', 'w');
         fwrite($fp, $config_string);
         fclose($fp);
 
@@ -229,7 +230,7 @@ class InstallerController extends Controller
             Artisan::call('db:seed', ['--force' => true]);
         }
 
-        $fp = fopen(base_path() . '/installed', 'w');
+        $fp = fopen(base_path().'/installed', 'w');
         fwrite($fp, $version);
         fclose($fp);
 
@@ -244,17 +245,16 @@ class InstallerController extends Controller
         Config::set("database.connections.{$database['type']}.username", $database['username']);
         Config::set("database.connections.{$database['type']}.password", $database['password']);
 
-        $databaseConnectionValid = FALSE;
+        $databaseConnectionValid = false;
 
         try {
             DB::reconnect();
             $pdo = DB::connection()->getPdo();
-            if(!empty($pdo)) {
-                $databaseConnectionValid = TRUE;
+            if (! empty($pdo)) {
+                $databaseConnectionValid = true;
             }
-
         } catch (\Exception $e) {
-            Log::error('Database connection details invalid' . $e->getMessage());
+            Log::error('Database connection details invalid'.$e->getMessage());
         }
 
         return $databaseConnectionValid;

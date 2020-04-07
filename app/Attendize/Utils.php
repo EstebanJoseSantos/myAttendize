@@ -8,7 +8,7 @@ use PhpSpec\Exception\Exception;
 class Utils
 {
     /**
-     * Check if the current user is registered
+     * Check if the current user is registered.
      *
      * @return bool
      */
@@ -18,7 +18,7 @@ class Utils
     }
 
     /**
-     * Check if the current user is confirmed
+     * Check if the current user is confirmed.
      *
      * @return bool
      */
@@ -28,7 +28,7 @@ class Utils
     }
 
     /**
-     * Check if the DB has been set up
+     * Check if the DB has been set up.
      *
      * @return bool
      */
@@ -75,7 +75,7 @@ class Utils
 
     public static function isDownForMaintenance()
     {
-        return file_exists(storage_path() . '/framework/down');
+        return file_exists(storage_path().'/framework/down');
     }
 
     /**
@@ -87,16 +87,14 @@ class Utils
      */
     public static function userOwns($object)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
         try {
-
             if (Auth::user()->account_id === $object->account_id) {
                 return true;
             }
-
         } catch (Exception $e) {
             return false;
         }
@@ -105,7 +103,7 @@ class Utils
     }
 
     /**
-     * Determine max upload size
+     * Determine max upload size.
      *
      * @return float|int
      */
@@ -129,7 +127,7 @@ class Utils
     }
 
     /**
-     * Parses the given size
+     * Parses the given size.
      *
      * @param $size
      * @return float
@@ -147,7 +145,7 @@ class Utils
     }
 
     /**
-     * Check if Attendize is installed
+     * Check if Attendize is installed.
      *
      * @return bool
      */

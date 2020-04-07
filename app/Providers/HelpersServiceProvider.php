@@ -21,7 +21,7 @@ class HelpersServiceProvider extends ServiceProvider
     }
 
     /**
-     * Add blade custom if for PaymentUtils
+     * Add blade custom if for PaymentUtils.
      *
      * @return void
      */

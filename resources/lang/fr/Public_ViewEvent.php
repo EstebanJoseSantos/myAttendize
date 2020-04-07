@@ -1,9 +1,9 @@
 <?php
 /*************************************************************************
- Generated via "php artisan localization:missing" at 2018/04/18 16:27:47 
+ Generated via "php artisan localization:missing" at 2018/04/18 16:27:47
 *************************************************************************/
 
-return array (
+return [
   //==================================== Translations ====================================//
   'Contact' => 'Contact',
   'DETAILS' => 'DÉTAILS',
@@ -80,4 +80,4 @@ return array (
   'your_message' => 'Votre message',
   'your_name' => 'Votre nom',
   'your' => 'Vos',
-);
+];

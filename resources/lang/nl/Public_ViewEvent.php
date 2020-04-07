@@ -76,5 +76,5 @@ return [
   'your_information' => 'Uw information',
   'your_message' => 'Uw bericht',
   'your_name' => 'Uw naam',
-  'your' => 'Uw'
+  'your' => 'Uw',
 ];

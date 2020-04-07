@@ -24,11 +24,11 @@ class GenerateTicket extends Job implements ShouldQueue
      */
     public function __construct($reference)
     {
-        Log::info("Generating ticket: #" . $reference);
+        Log::info('Generating ticket: #'.$reference);
         $this->reference = $reference;
-        $this->order_reference = explode("-", $reference)[0];
-        if (strpos($reference, "-")) {
-            $this->attendee_reference_index = explode("-", $reference)[1];
+        $this->order_reference = explode('-', $reference)[0];
+        if (strpos($reference, '-')) {
+            $this->attendee_reference_index = explode('-', $reference)[1];
         }
     }
 
@@ -39,13 +39,13 @@ class GenerateTicket extends Job implements ShouldQueue
      */
     public function handle()
     {
-
         $file_name = $this->reference;
-        $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name;
-        $file_with_ext = $file_path . ".pdf";
+        $file_path = public_path(config('attendize.event_pdf_tickets_path')).'/'.$file_name;
+        $file_with_ext = $file_path.'.pdf';
 
         if (file_exists($file_with_ext)) {
-            Log::info("Use ticket from cache: " . $file_with_ext);
+            Log::info('Use ticket from cache: '.$file_with_ext);
+
             return;
         }
 
@@ -77,18 +77,17 @@ class GenerateTicket extends Job implements ShouldQueue
         try {
             PDF::setOutputMode('F'); // force to file
             PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, $file_path);
-            Log::info("Ticket generated!");
-        } catch(\Exception $e) {
-            Log::error("Error generating ticket. This can be due to permissions on vendor/nitmedia/wkhtml2pdf/src/Nitmedia/Wkhtml2pdf/lib. This folder requires write and execute permissions for the web user");
-            Log::error("Error message. " . $e->getMessage());
-            Log::error("Error stack trace" . $e->getTraceAsString());
+            Log::info('Ticket generated!');
+        } catch (\Exception $e) {
+            Log::error('Error generating ticket. This can be due to permissions on vendor/nitmedia/wkhtml2pdf/src/Nitmedia/Wkhtml2pdf/lib. This folder requires write and execute permissions for the web user');
+            Log::error('Error message. '.$e->getMessage());
+            Log::error('Error stack trace'.$e->getTraceAsString());
             $this->fail($e);
         }
-
     }
 
     private function isAttendeeTicket()
     {
-        return ($this->attendee_reference_index != null);
+        return $this->attendee_reference_index != null;
     }
 }

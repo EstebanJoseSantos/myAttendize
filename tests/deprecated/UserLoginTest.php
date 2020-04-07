@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Attendize\Utils;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Attendize\Utils;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class UserLoginTest extends TestCase
 {
     /**
-     * Test login page is successful
+     * Test login page is successful.
      *
      * @return void
      */
@@ -22,7 +22,7 @@ class UserLoginTest extends TestCase
     }
 
     /**
-     * Test login page is unsuccessful with wrong password
+     * Test login page is unsuccessful with wrong password.
      *
      * @return void
      */
@@ -37,7 +37,7 @@ class UserLoginTest extends TestCase
     }
 
     /**
-     * Test login page is unsuccessful with wrong email address
+     * Test login page is unsuccessful with wrong email address.
      *
      * @return void
      */

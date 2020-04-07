@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     /**
-     * redirect index page
+     * redirect index page.
      * @param  Request $request http request
      * @return \Illuminate\Http\RedirectResponse
      */

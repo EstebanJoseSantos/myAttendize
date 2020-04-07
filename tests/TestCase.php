@@ -10,7 +10,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication, DatabaseSetup;
 
     /**
-     * Initializes the tests
+     * Initializes the tests.
      */
     public function setUp(): void
     {

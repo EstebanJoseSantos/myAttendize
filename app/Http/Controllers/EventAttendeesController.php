@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Cancellation\OrderCancellation;
 use App\Exports\AttendeesExport;
@@ -13,8 +15,8 @@ use App\Models\EventStats;
 use App\Models\Message;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Services\Order as OrderService;
 use App\Models\Ticket;
+use App\Services\Order as OrderService;
 use Auth;
 use Config;
 use DB;
@@ -29,7 +31,7 @@ use Validator;
 class EventAttendeesController extends MyBaseController
 {
     /**
-     * Show the attendees list
+     * Show the attendees list.
      *
      * @param Request $request
      * @param $event_id
@@ -50,19 +52,19 @@ class EventAttendeesController extends MyBaseController
                 ->withoutCancelled()
                 ->join('orders', 'orders.id', '=', 'attendees.order_id')
                 ->where(function ($query) use ($searchQuery) {
-                    $query->where('orders.order_reference', 'like', $searchQuery . '%')
-                        ->orWhere('attendees.first_name', 'like', $searchQuery . '%')
-                        ->orWhere('attendees.email', 'like', $searchQuery . '%')
-                        ->orWhere('attendees.last_name', 'like', $searchQuery . '%');
+                    $query->where('orders.order_reference', 'like', $searchQuery.'%')
+                        ->orWhere('attendees.first_name', 'like', $searchQuery.'%')
+                        ->orWhere('attendees.email', 'like', $searchQuery.'%')
+                        ->orWhere('attendees.last_name', 'like', $searchQuery.'%');
                 })
-                ->orderBy(($sort_by == 'order_reference' ? 'orders.' : 'attendees.') . $sort_by, $sort_order)
+                ->orderBy(($sort_by == 'order_reference' ? 'orders.' : 'attendees.').$sort_by, $sort_order)
                 ->select('attendees.*', 'orders.order_reference')
                 ->paginate();
         } else {
             $attendees = $event->attendees()
                 ->join('orders', 'orders.id', '=', 'attendees.order_id')
                 ->withoutCancelled()
-                ->orderBy(($sort_by == 'order_reference' ? 'orders.' : 'attendees.') . $sort_by, $sort_order)
+                ->orderBy(($sort_by == 'order_reference' ? 'orders.' : 'attendees.').$sort_by, $sort_order)
                 ->select('attendees.*', 'orders.order_reference')
                 ->paginate();
         }
@@ -79,7 +81,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Show the 'Invite Attendee' modal
+     * Show the 'Invite Attendee' modal.
      *
      * @param Request $request
      * @param $event_id
@@ -94,7 +96,7 @@ class EventAttendeesController extends MyBaseController
          * @todo This is a bit hackish
          */
         if ($event->tickets->count() === 0) {
-            return '<script>showMessage("'.trans("Controllers.addInviteError").'");</script>';
+            return '<script>showMessage("'.trans('Controllers.addInviteError').'");</script>';
         }
 
         return view('ManageEvent.Modals.InviteAttendee', [
@@ -104,7 +106,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Invite an attendee
+     * Invite an attendee.
      *
      * @param Request $request
      * @param $event_id
@@ -114,13 +116,13 @@ class EventAttendeesController extends MyBaseController
     {
         $rules = [
             'first_name' => 'required',
-            'ticket_id'  => 'required|exists:tickets,id,account_id,' . \Auth::user()->account_id,
+            'ticket_id'  => 'required|exists:tickets,id,account_id,'.\Auth::user()->account_id,
             'email'      => 'email|required',
         ];
 
         $messages = [
-            'ticket_id.exists'   => trans("Controllers.ticket_not_exists_error"),
-            'ticket_id.required' => trans("Controllers.ticket_field_required_error"),
+            'ticket_id.exists'   => trans('Controllers.ticket_not_exists_error'),
+            'ticket_id.required' => trans('Controllers.ticket_field_required_error'),
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -205,12 +207,11 @@ class EventAttendeesController extends MyBaseController
             $attendee->reference_index = 1;
             $attendee->save();
 
-
             if ($email_attendee == '1') {
                 $this->dispatch(new SendAttendeeInvite($attendee));
             }
 
-            session()->flash('message', trans("Controllers.attendee_successfully_invited"));
+            session()->flash('message', trans('Controllers.attendee_successfully_invited'));
 
             DB::commit();
 
@@ -220,22 +221,19 @@ class EventAttendeesController extends MyBaseController
                     'event_id' => $event_id,
                 ]),
             ]);
-
         } catch (Exception $e) {
-
             Log::error($e);
             DB::rollBack();
 
             return response()->json([
                 'status' => 'error',
-                'error'  => trans("Controllers.attendee_exception")
+                'error'  => trans('Controllers.attendee_exception'),
             ]);
         }
-
     }
 
     /**
-     * Show the 'Import Attendee' modal
+     * Show the 'Import Attendee' modal.
      *
      * @param Request $request
      * @param $event_id
@@ -250,7 +248,7 @@ class EventAttendeesController extends MyBaseController
          * @todo This is a bit hackish
          */
         if ($event->tickets->count() === 0) {
-            return '<script>showMessage("'.trans("Controllers.addInviteError").'");</script>';
+            return '<script>showMessage("'.trans('Controllers.addInviteError').'");</script>';
         }
 
         return view('ManageEvent.Modals.ImportAttendee', [
@@ -259,9 +257,8 @@ class EventAttendeesController extends MyBaseController
         ]);
     }
 
-
     /**
-     * Import attendees
+     * Import attendees.
      *
      * @param Request $request
      * @param $event_id
@@ -270,12 +267,12 @@ class EventAttendeesController extends MyBaseController
     public function postImportAttendee(Request $request, $event_id)
     {
         $rules = [
-            'ticket_id'      => 'required|exists:tickets,id,account_id,' . \Auth::user()->account_id,
+            'ticket_id'      => 'required|exists:tickets,id,account_id,'.\Auth::user()->account_id,
             'attendees_list' => 'required|mimes:csv,txt|max:5000|',
         ];
 
         $messages = [
-            'ticket_id.exists' => trans("Controllers.ticket_not_exists_error"),
+            'ticket_id.exists' => trans('Controllers.ticket_not_exists_error'),
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -284,14 +281,13 @@ class EventAttendeesController extends MyBaseController
                 'status'   => 'error',
                 'messages' => $validator->messages()->toArray(),
             ]);
-
         }
 
         $event = Event::findOrFail($event_id);
         $ticket = Ticket::scope()->find($request->get('ticket_id'));
         $emailAttendees = $request->get('email_ticket');
         if ($request->file('attendees_list')) {
-            (new AttendeesImport($event, $ticket, (bool)$emailAttendees))->import(request()->file('attendees_list'));
+            (new AttendeesImport($event, $ticket, (bool) $emailAttendees))->import(request()->file('attendees_list'));
         }
 
         session()->flash('message', 'Attendees Successfully Invited');
@@ -305,7 +301,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Show the printable attendee list
+     * Show the printable attendee list.
      *
      * @param $event_id
      * @return View
@@ -319,7 +315,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Show the 'Message Attendee' modal
+     * Show the 'Message Attendee' modal.
      *
      * @param Request $request
      * @param $attendee_id
@@ -338,7 +334,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Send a message to an attendee
+     * Send a message to an attendee.
      *
      * @param Request $request
      * @param $attendee_id
@@ -384,18 +380,18 @@ class EventAttendeesController extends MyBaseController
                 $message->to($attendee->event->organiser->email, $attendee->event->organiser->name)
                     ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
                     ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                    ->subject($data['subject'] . trans("Email.organiser_copy"));
+                    ->subject($data['subject'].trans('Email.organiser_copy'));
             });
         }
 
         return response()->json([
             'status'  => 'success',
-            'message' => trans("Controllers.message_successfully_sent"),
+            'message' => trans('Controllers.message_successfully_sent'),
         ]);
     }
 
     /**
-     * Shows the 'Message Attendees' modal
+     * Shows the 'Message Attendees' modal.
      *
      * @param $event_id
      * @return View
@@ -411,7 +407,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Send a message to attendees
+     * Send a message to attendees.
      *
      * @param Request $request
      * @param $event_id
@@ -462,23 +458,21 @@ class EventAttendeesController extends MyBaseController
         $attendee = Attendee::scope()->findOrFail($attendee_id);
 
         Config::set('queue.default', 'sync');
-        Log::info("*********");
+        Log::info('*********');
         Log::info($attendee_id);
         Log::info($attendee);
 
+        $this->dispatch(new GenerateTicket($attendee->order->order_reference.'-'.$attendee->reference_index));
 
-        $this->dispatch(new GenerateTicket($attendee->order->order_reference . "-" . $attendee->reference_index));
-
-        $pdf_file_name = $attendee->order->order_reference . '-' . $attendee->reference_index;
-        $pdf_file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $pdf_file_name;
-        $pdf_file = $pdf_file_path . '.pdf';
-
+        $pdf_file_name = $attendee->order->order_reference.'-'.$attendee->reference_index;
+        $pdf_file_path = public_path(config('attendize.event_pdf_tickets_path')).'/'.$pdf_file_name;
+        $pdf_file = $pdf_file_path.'.pdf';
 
         return response()->download($pdf_file);
     }
 
     /**
-     * Downloads an export of attendees
+     * Downloads an export of attendees.
      *
      * @param $event_id
      * @param string $export_as (xlsx, xls, csv, html)
@@ -487,11 +481,12 @@ class EventAttendeesController extends MyBaseController
     {
         $event = Event::scope()->findOrFail($event_id);
         $date = date('d-m-Y-g.i.a');
+
         return (new AttendeesExport($event->id))->download("attendees-as-of-{$date}.{$export_as}");
     }
 
     /**
-     * Show the 'Edit Attendee' modal
+     * Show the 'Edit Attendee' modal.
      *
      * @param Request $request
      * @param $event_id
@@ -512,7 +507,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Updates an attendee
+     * Updates an attendee.
      *
      * @param Request $request
      * @param $event_id
@@ -523,13 +518,13 @@ class EventAttendeesController extends MyBaseController
     {
         $rules = [
             'first_name' => 'required',
-            'ticket_id'  => 'required|exists:tickets,id,account_id,' . Auth::user()->account_id,
+            'ticket_id'  => 'required|exists:tickets,id,account_id,'.Auth::user()->account_id,
             'email'      => 'required|email',
         ];
 
         $messages = [
-            'ticket_id.exists'   => trans("Controllers.ticket_not_exists_error"),
-            'ticket_id.required' => trans("Controllers.ticket_field_required_error"),
+            'ticket_id.exists'   => trans('Controllers.ticket_not_exists_error'),
+            'ticket_id.required' => trans('Controllers.ticket_field_required_error'),
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -544,7 +539,7 @@ class EventAttendeesController extends MyBaseController
         $attendee = Attendee::scope()->findOrFail($attendee_id);
         $attendee->update($request->all());
 
-        session()->flash('message',trans("Controllers.successfully_updated_attendee"));
+        session()->flash('message', trans('Controllers.successfully_updated_attendee'));
 
         return response()->json([
             'status'      => 'success',
@@ -554,7 +549,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Shows the 'Cancel Attendee' modal
+     * Shows the 'Cancel Attendee' modal.
      *
      * @param Request $request
      * @param $event_id
@@ -575,7 +570,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Cancels an attendee
+     * Cancels an attendee.
      *
      * @param Request $request
      * @param $event_id
@@ -588,7 +583,7 @@ class EventAttendeesController extends MyBaseController
         if ($attendee->is_cancelled) {
             return response()->json([
                 'status' => 'success',
-                'message' => trans("Controllers.attendee_already_cancelled"),
+                'message' => trans('Controllers.attendee_already_cancelled'),
             ]);
         }
 
@@ -605,6 +600,7 @@ class EventAttendeesController extends MyBaseController
             $data['refund_amount'] = $orderCancellation->getRefundAmount();
         } catch (Exception | OrderRefundException $e) {
             Log::error($e);
+
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
@@ -617,7 +613,7 @@ class EventAttendeesController extends MyBaseController
                     $message->to($attendee->email, $attendee->full_name)
                         ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
                         ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                        ->subject(trans("Email.your_ticket_cancelled"));
+                        ->subject(trans('Email.your_ticket_cancelled'));
                 });
             } catch (\Exception $e) {
                 Log::error($e);
@@ -631,14 +627,14 @@ class EventAttendeesController extends MyBaseController
                 $message->to($attendee->email, $attendee->full_name)
                     ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
                     ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                    ->subject(trans("Email.refund_from_name", ["name"=>$attendee->event->organiser->name]));
+                    ->subject(trans('Email.refund_from_name', ['name'=>$attendee->event->organiser->name]));
             });
         } catch (\Exception $e) {
             Log::error($e);
             // We do not want to kill the flow if the email fails
         }
 
-        session()->flash('message', trans("Controllers.successfully_cancelled_attendee"));
+        session()->flash('message', trans('Controllers.successfully_cancelled_attendee'));
 
         return response()->json([
             'status' => 'success',
@@ -648,7 +644,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Show the 'Message Attendee' modal
+     * Show the 'Message Attendee' modal.
      *
      * @param Request $request
      * @param $attendee_id
@@ -667,7 +663,7 @@ class EventAttendeesController extends MyBaseController
     }
 
     /**
-     * Send a message to an attendee
+     * Send a message to an attendee.
      *
      * @param Request $request
      * @param $attendee_id
@@ -681,13 +677,12 @@ class EventAttendeesController extends MyBaseController
 
         return response()->json([
             'status'  => 'success',
-            'message' => trans("Controllers.ticket_successfully_resent"),
+            'message' => trans('Controllers.ticket_successfully_resent'),
         ]);
     }
 
-
     /**
-     * Show an attendee ticket
+     * Show an attendee ticket.
      *
      * @param Request $request
      * @param $attendee_id
@@ -710,9 +705,7 @@ class EventAttendeesController extends MyBaseController
         if ($request->get('download') == '1') {
             return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
         }
+
         return view('Public.ViewEvent.Partials.PDFTicket', $data);
     }
-
 }
-
-

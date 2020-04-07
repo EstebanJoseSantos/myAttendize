@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Organiser;
 use File;
-use Image;
 use Illuminate\Http\Request;
+use Image;
 use Validator;
 
 class OrganiserCustomizeController extends MyBaseController
 {
     /**
-     * Show organiser setting page
+     * Show organiser setting page.
      *
      * @param $organiser_id
      * @return mixed
@@ -41,7 +41,7 @@ class OrganiserCustomizeController extends MyBaseController
             $organiser->addExtraValidationRules();
         }
 
-        if (!$organiser->validate($request->all())) {
+        if (! $organiser->validate($request->all())) {
             return response()->json([
                 'status'   => 'error',
                 'messages' => $organiser->errors(),
@@ -72,7 +72,7 @@ class OrganiserCustomizeController extends MyBaseController
 
         $organiser->save();
 
-        session()->flash('message', trans("Controllers.successfully_updated_organiser"));
+        session()->flash('message', trans('Controllers.successfully_updated_organiser'));
 
         return response()->json([
             'status'      => 'success',
@@ -81,7 +81,7 @@ class OrganiserCustomizeController extends MyBaseController
     }
 
     /**
-     * Edits organiser profile page colors / design
+     * Edits organiser profile page colors / design.
      *
      * @param Request $request
      * @param $organiser_id
@@ -97,8 +97,8 @@ class OrganiserCustomizeController extends MyBaseController
             'page_text_color'      => ['required'],
         ];
         $messages = [
-            'page_header_bg_color.required' => trans("Controllers.error.page_header_bg_color.required"),
-            'page_bg_color.required'        => trans("Controllers.error.page_bg_color.required"),
+            'page_header_bg_color.required' => trans('Controllers.error.page_header_bg_color.required'),
+            'page_bg_color.required'        => trans('Controllers.error.page_bg_color.required'),
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -110,15 +110,15 @@ class OrganiserCustomizeController extends MyBaseController
             ]);
         }
 
-        $organiser->page_bg_color        = $request->get('page_bg_color');
+        $organiser->page_bg_color = $request->get('page_bg_color');
         $organiser->page_header_bg_color = $request->get('page_header_bg_color');
-        $organiser->page_text_color      = $request->get('page_text_color');
+        $organiser->page_text_color = $request->get('page_text_color');
 
         $organiser->save();
 
         return response()->json([
             'status'  => 'success',
-            'message' => trans("Controllers.organiser_design_successfully_updated"),
+            'message' => trans('Controllers.organiser_design_successfully_updated'),
         ]);
     }
 }

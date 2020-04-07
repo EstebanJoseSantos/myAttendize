@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
     'attendize_register'      => 'Attendizeに登録していただきありがとうございます',
     'invite_user'             => ':nameがあなたを:appアカウントに追加しました。',
     'message_regarding_event' => ':eventに関するメッセージ',
@@ -9,6 +9,5 @@ return array(
     'your_ticket_cancelled'   => 'あなたのチケットはキャンセルされました',
     'your_ticket_for_event'   => 'イベント:eventのためのあなたのチケット。',
     //================================== Obsolete strings ==================================//
-    'LLH:obsolete'            =>
-        array(),
-);
+    'LLH:obsolete'            => [],
+];

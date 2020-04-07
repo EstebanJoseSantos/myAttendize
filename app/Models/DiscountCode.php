@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-    /*
+/*
       Attendize.com   - Event Management & Ticketing
      */
 

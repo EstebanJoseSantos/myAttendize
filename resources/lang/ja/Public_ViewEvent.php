@@ -75,5 +75,5 @@ return [
     'your_information'                  => 'あなたの情報',
     'your_message'                      => 'あなたのメッセージ',
     'your_name'                         => 'あなたの名前',
-    'your'                              => 'あなたの'
+    'your'                              => 'あなたの',
 ];

@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Str;
+use Illuminate\Http\UploadedFile;
 use Image;
+use Str;
 
 class Organiser extends MyBaseModel implements AuthenticatableContract
 {
@@ -14,7 +14,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     /**
      * The validation rules for the model.
      *
-     * @var array $rules
+     * @var array
      */
     protected $rules = [
         'name'           => ['required'],
@@ -31,7 +31,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     /**
      * The validation rules for the model.
      *
-     * @var array $attributes
+     * @var array
      */
     protected $attributes = [
         'tax_name'        => 'Tax Name',
@@ -42,7 +42,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     /**
      * The validation error messages for the model.
      *
-     * @var array $messages
+     * @var array
      */
     protected $messages = [
         'name.required'        => 'You must at least give a name for the event organiser.',
@@ -52,7 +52,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     ];
 
     /**
-     * The account associated with the organiser
+     * The account associated with the organiser.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -82,7 +82,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     }
 
     /**
-     * Get the orders related to an organiser
+     * Get the orders related to an organiser.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
@@ -98,8 +98,8 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
      */
     public function getFullLogoPathAttribute()
     {
-        if ($this->logo_path && (file_exists(config('attendize.cdn_url_user_assets') . '/' . $this->logo_path) || file_exists(public_path($this->logo_path)))) {
-            return config('attendize.cdn_url_user_assets') . '/' . $this->logo_path;
+        if ($this->logo_path && (file_exists(config('attendize.cdn_url_user_assets').'/'.$this->logo_path) || file_exists(public_path($this->logo_path)))) {
+            return config('attendize.cdn_url_user_assets').'/'.$this->logo_path;
         }
 
         return config('attendize.fallback_organiser_logo_url');
@@ -134,15 +134,14 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     }
 
     /**
-     * TODO:implement DailyStats method
+     * TODO:implement DailyStats method.
      */
     public function getDailyStats()
     {
     }
 
-
     /**
-     * Set a new Logo for the Organiser
+     * Set a new Logo for the Organiser.
      *
      * @param \Illuminate\Http\UploadedFile $file
      */
@@ -151,7 +150,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
         $filename = Str::slug($this->name).'-logo-'.$this->id.'.'.strtolower($file->getClientOriginalExtension());
 
         // Image Directory
-        $imageDirectory = public_path() . '/' . config('attendize.organiser_images_path');
+        $imageDirectory = public_path().'/'.config('attendize.organiser_images_path');
 
         // Paths
         $relativePath = config('attendize.organiser_images_path').'/'.$filename;
@@ -174,10 +173,10 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
     }
 
     /**
-     * Adds extra validator rules to the organiser object depending on whether tax is required or not
+     * Adds extra validator rules to the organiser object depending on whether tax is required or not.
      */
-    public function addExtraValidationRules() {
+    public function addExtraValidationRules()
+    {
         $this->rules = array_merge($this->rules, $this->extra_rules);
     }
 }
-

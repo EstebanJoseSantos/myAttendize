@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Attendize\Utils;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Attendize\Utils;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class UserSignUpTest extends TestCase
 {
     /**
-     * Test sign up page is successful
+     * Test sign up page is successful.
      *
      * @return void
      */
@@ -33,7 +33,7 @@ class UserSignUpTest extends TestCase
     }
 
     /**
-     * Test sign up page is unsuccessful
+     * Test sign up page is unsuccessful.
      *
      * @return void
      */
@@ -45,7 +45,7 @@ class UserSignUpTest extends TestCase
     }
 
     /**
-     * Test sign up page is unsuccessful
+     * Test sign up page is unsuccessful.
      *
      * @return void
      */
@@ -62,7 +62,7 @@ class UserSignUpTest extends TestCase
     }
 
     /**
-     * Test sign up page is unsuccessful
+     * Test sign up page is unsuccessful.
      *
      * @return void
      */

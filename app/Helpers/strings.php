@@ -1,5 +1,6 @@
 <?php
-if ( ! function_exists('sanitise')) {
+
+if (! function_exists('sanitise')) {
     /**
      * @param string $input
      * @return string
@@ -12,6 +13,7 @@ if ( ! function_exists('sanitise')) {
         $clear = urldecode($clear);
         $clear = preg_replace('~[\r\n\t]+~', ' ', trim($clear));
         $clear = preg_replace('/ +/', ' ', $clear);
+
         return $clear;
     }
 
@@ -23,6 +25,7 @@ if ( ! function_exists('sanitise')) {
     {
         $clear = preg_replace('~[\r\n\t]+~', ' ', trim($input));
         $clear = preg_replace('/ +/', ' ', $clear);
+
         return $clear;
     }
 }

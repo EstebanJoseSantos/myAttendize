@@ -16,7 +16,7 @@ class UserSignupController extends Controller
 
     public function __construct(Guard $auth)
     {
-        if (Account::count() > 0 && !Utils::isAttendize()) {
+        if (Account::count() > 0 && ! Utils::isAttendize()) {
             return redirect()->route('login');
         }
 
@@ -27,6 +27,7 @@ class UserSignupController extends Controller
     public function showSignup()
     {
         $is_attendize = Utils::isAttendize();
+
         return view('Public.LoginAndRegister.Signup', compact('is_attendize'));
     }
 
@@ -66,7 +67,7 @@ class UserSignupController extends Controller
                 ['first_name' => $user->first_name, 'confirmation_code' => $user->confirmation_code],
                 function ($message) use ($request) {
                     $message->to($request->get('email'), $request->get('first_name'))
-                        ->subject(trans("Email.attendize_register"));
+                        ->subject(trans('Email.attendize_register'));
                 });
         }
 
@@ -76,7 +77,7 @@ class UserSignupController extends Controller
     }
 
     /**
-     * Confirm a user email
+     * Confirm a user email.
      *
      * @param $confirmation_code
      * @return mixed
@@ -85,9 +86,9 @@ class UserSignupController extends Controller
     {
         $user = User::whereConfirmationCode($confirmation_code)->first();
 
-        if (!$user) {
+        if (! $user) {
             return view('Public.Errors.Generic', [
-                'message' => trans("Controllers.confirmation_malformed"),
+                'message' => trans('Controllers.confirmation_malformed'),
             ]);
         }
 
@@ -95,7 +96,7 @@ class UserSignupController extends Controller
         $user->confirmation_code = null;
         $user->save();
 
-        session()->flash('message', trans("Controllers.confirmation_successful"));
+        session()->flash('message', trans('Controllers.confirmation_successful'));
 
         return redirect()->route('login');
     }

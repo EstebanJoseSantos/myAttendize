@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class ChangePrivateReferenceNumberColumnType extends Migration
 {
     /**
      * Run the migrations.
      * Change Private Reference Number from INT to VARCHAR ColumnType
-     * and increases the character count to 15
+     * and increases the character count to 15.
      *
      * @return void
      */

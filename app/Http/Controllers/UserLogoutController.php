@@ -15,7 +15,7 @@ class UserLogoutController extends Controller
     }
 
     /**
-     * Log a user out and redirect them
+     * Log a user out and redirect them.
      *
      * @return mixed
      */
@@ -23,6 +23,7 @@ class UserLogoutController extends Controller
     {
         $this->auth->logout();
         Session::flush();
+
         return redirect()->to('/?logged_out=yup');
     }
 }
