@@ -45,7 +45,11 @@
                     <i class="ico-edit"></i> @lang("basic.edit")
                 </a>
             </li>
-
+            <li>
+                <a href="{{route('showCreateEvent', ['event_id' => $event->id])}}">
+                    <i class="ico-copy"></i> @lang("basic.clone")
+                </a>
+            </li>
             <li>
                 <a href="{{route('showEventDashboard', ['event_id' => $event->id])}}">
                     <i class="ico-cog"></i> @lang("basic.manage")
