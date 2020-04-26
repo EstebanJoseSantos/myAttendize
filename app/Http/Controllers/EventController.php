@@ -22,6 +22,12 @@ class EventController extends MyBaseController
      */
     public function showCreateEvent(Request $request)
     {
+         /* Check if I want to clone instead of create*/
+        $isClone = $request->get('event_id');
+		if ($isClone !=null) {
+			return $this->CreateCloneEvent($request);
+		}
+        
         $data = [
             'modal_id'     => $request->get('modal_id'),
             'organisers'   => Organiser::scope()->pluck('name', 'id'),
@@ -359,5 +365,67 @@ class EventController extends MyBaseController
         return redirect()->action(
             'EventDashboardController@showDashboard', ['event_id' => $event_id]
         );
+    }
+    
+     /**
+     * Clone an event
+     *
+     * @param Request $request
+     * @param $event_id
+     * @return redirect to page
+     */
+    public function CreateCloneEvent(Request $request)
+    {
+        
+        /* need to prepare new dummy dates for new event */
+        $format = config('attendize.default_datetime_format');
+        $ini     = date('Y-m-d', strtotime(' + 7 days'));
+        $fin     = date('Y-m-d', strtotime(' + 9 days'));
+        $fechaini = date($format,strtotime($ini));
+        $fechafin = date($format,strtotime($fin));
+
+
+        /* Create an empty Event */
+	 $cloned_event = Event::createNew();
+
+	/* Clone event from choosen event_id (original) */
+        $event = Event::scope()->findOrFail($request->get('event_id'));
+        $cloned_event= clone $event;
+
+
+        /* Set values for the new Event */
+         $cloned_event->is_live = 0;
+         $cloned_event->id= null;
+         $cloned_event->title = $event->title.'(New)';
+         $cloned_event->start_date = $fechaini 	;
+         $cloned_event->end_date   = $fechafin	;
+         $cloned_event->exists = false; //very important so IsDirty returns correctly
+
+
+
+         try {
+              $cloned_event->save();
+         } catch (\Exception $e) {
+              Log::error($e);
+              return response()->json([
+                'status'   => $e,
+                'messages' => trans("Controllers.event_create_exception"),
+            ]);
+         }
+
+        /* We need to test if there is an image associated to event id */
+        $oldimage = EventImage::where('event_id', '=', $event->id)->first();
+
+        if ($oldimage) {
+
+        /* create new instance of Eventimage */
+        $eventImage = EventImage::createNew(); 
+        $eventImage->image_path = $oldimage->image_path;
+        $eventImage->event_id  = $cloned_event->id;	
+        $eventImage->save();
+        }
+       /* redirect to wherever you want */
+	return redirect( route('showOrganiserEvents', array('organiser_id' => $cloned_event->organiser_id) )  );
+
     }
 }
