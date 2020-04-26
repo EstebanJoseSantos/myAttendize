@@ -13,6 +13,7 @@ return array (
   'back_to_page' => 'Back To :page',
   'back_to_orders' => 'Back to orders',
   'cancel' => 'Cancel',
+   'clone' => 'Clone',
   'customize' => 'Customize',
   'dashboard' => 'Dashboard',
   'days' => 'days',
