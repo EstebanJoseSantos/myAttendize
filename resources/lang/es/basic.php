@@ -7,6 +7,7 @@ return array(
     'back_to_login'     => 'Volver a inicio de sesión',
     'back_to_page'      => 'Volver a :page',
     'cancel'            => 'Cancelar',
+    'clone'             => 'Clonar',
     'customize'         => 'Personalizar',
     'dashboard'         => 'Panel de control',
     'days'              => 'días',
