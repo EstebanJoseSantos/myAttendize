@@ -379,10 +379,9 @@ class EventController extends MyBaseController
         
         /* need to prepare new dummy dates for new event */
         $format = config('attendize.default_datetime_format');
-        $ini     = date('Y-m-d', strtotime(' + 7 days'));
-        $fin     = date('Y-m-d', strtotime(' + 9 days'));
-        $fechaini = date($format,strtotime($ini));
-        $fechafin = date($format,strtotime($fin));
+        //here you can set new event date as you like or repeat cloned event dates later in code as  = $event->start_date;
+        $fechaini     = date($format, strtotime(' + 7 days')); 
+        $fechafin     = date($format, strtotime(' + 9 days'));
 
 
         /* Create an empty Event */
@@ -413,17 +412,38 @@ class EventController extends MyBaseController
             ]);
          }
 
-        /* We need to test if there is an image associated to event id */
-        $oldimage = EventImage::where('event_id', '=', $event->id)->first();
-
-        if ($oldimage) {
-
-        /* create new instance of Eventimage */
-        $eventImage = EventImage::createNew(); 
-        $eventImage->image_path = $oldimage->image_path;
-        $eventImage->event_id  = $cloned_event->id;	
-        $eventImage->save();
+    // now get images and duplicate them (thanks for a better code from @emergingdzns )
+    $images = EventImage::where('event_id',$event->id)->get();
+    if (count($images) > 0) {
+        foreach($images as $image) {
+            $newImage = new EventImage();
+            $newImage->image_path = $image->image_path;
+            $newImage->created_at = date($format);
+            $newImage->updated_at = date($format);
+            $newImage->event_id = $cloned_event->id;
+            $newImage->account_id = $image->account_id;
+            $newImage->user_id = $image->user_id;
+            $newImage->save();
         }
+    }
+    // now get tickets for the event and duplicate them
+    $tickets = Ticket::where('event_id',$event->id)->get();
+    if (count($tickets) > 0) {
+        foreach($tickets as $ticket) {
+            $ticket = $ticket->toArray();
+            unset($ticket['id']);
+            $ticket['event_id'] = $cloned_event->id;
+            $ticket['quantity_sold'] = 0;
+            $ticket['sales_volume'] = 0.00;
+            $ticket['organiser_fees_volume'] = 0.00;
+            $ticket['created_at'] = date($format);
+            $ticket['updated_at'] = date($format);
+            $newTicket = new Ticket();
+            $newTicket->fill($ticket);
+            $newTicket->save();
+        }
+    }
+
        /* redirect to wherever you want */
 	return redirect( route('showOrganiserEvents', array('organiser_id' => $cloned_event->organiser_id) )  );
 
