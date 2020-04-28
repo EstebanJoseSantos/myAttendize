@@ -403,7 +403,7 @@ class EventController extends MyBaseController
 
 
          try {
-              $cloned_event->save();
+          $cloned_event->save();
          } catch (\Exception $e) {
               Log::error($e);
               return response()->json([
@@ -418,8 +418,8 @@ class EventController extends MyBaseController
         foreach($images as $image) {
             $newImage = new EventImage();
             $newImage->image_path = $image->image_path;
-            $newImage->created_at = date($format);
-            $newImage->updated_at = date($format);
+            $newImage->created_at = date('Y-m-d H:i:s');
+            $newImage->updated_at = date('Y-m-d H:i:s');
             $newImage->event_id = $cloned_event->id;
             $newImage->account_id = $image->account_id;
             $newImage->user_id = $image->user_id;
@@ -427,6 +427,7 @@ class EventController extends MyBaseController
         }
     }
     // now get tickets for the event and duplicate them
+      
     $tickets = Ticket::where('event_id',$event->id)->get();
     if (count($tickets) > 0) {
         foreach($tickets as $ticket) {
@@ -436,8 +437,6 @@ class EventController extends MyBaseController
             $ticket['quantity_sold'] = 0;
             $ticket['sales_volume'] = 0.00;
             $ticket['organiser_fees_volume'] = 0.00;
-            $ticket['created_at'] = date($format);
-            $ticket['updated_at'] = date($format);
             $newTicket = new Ticket();
             $newTicket->fill($ticket);
             $newTicket->save();
