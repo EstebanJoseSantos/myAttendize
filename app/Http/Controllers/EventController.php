@@ -9,6 +9,7 @@ use Validator;
 use App\Models\Event;
 use App\Models\Organiser;
 use App\Models\EventImage;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Spatie\GoogleCalendar\Event as GCEvent;
 
@@ -22,12 +23,7 @@ class EventController extends MyBaseController
      */
     public function showCreateEvent(Request $request)
     {
-         /* Check if I want to clone instead of create*/
-        $isClone = $request->get('event_id');
-		if ($isClone !=null) {
-			return $this->CreateCloneEvent($request);
-		}
-        
+
         $data = [
             'modal_id'     => $request->get('modal_id'),
             'organisers'   => Organiser::scope()->pluck('name', 'id'),
@@ -45,6 +41,7 @@ class EventController extends MyBaseController
      */
     public function postCreateEvent(Request $request)
     {
+		
         $event = Event::createNew();
 
         if (!$event->validate($request->all())) {
@@ -300,7 +297,8 @@ class EventController extends MyBaseController
 
             \Storage::put(config('attendize.event_images_path') . '/' . $filename, file_get_contents($file_full_path));
 
-            EventImage::where('event_id', '=', $event->id)->delete();
+            EventImage::where('event_id', '=', $event->id )->delete();
+
 
             $eventImage = EventImage::createNew();
             $eventImage->image_path = config('attendize.event_images_path') . '/' . $filename;
@@ -366,7 +364,7 @@ class EventController extends MyBaseController
             'EventDashboardController@showDashboard', ['event_id' => $event_id]
         );
     }
-    
+
      /**
      * Clone an event
      *
@@ -374,7 +372,7 @@ class EventController extends MyBaseController
      * @param $event_id
      * @return redirect to page
      */
-    public function CreateCloneEvent(Request $request)
+    public function CreateCloneEvent($event_id = '')
     {
         
         /* need to prepare new dummy dates for new event */
@@ -388,7 +386,7 @@ class EventController extends MyBaseController
 	 $cloned_event = Event::createNew();
 
 	/* Clone event from choosen event_id (original) */
-        $event = Event::scope()->findOrFail($request->get('event_id'));
+        $event = Event::scope()->findOrFail($event_id);
         $cloned_event= clone $event;
 
 
@@ -447,4 +445,17 @@ class EventController extends MyBaseController
 	return redirect( route('showOrganiserEvents', array('organiser_id' => $cloned_event->organiser_id) )  );
 
     }
+	public function archiveEvent($event_id = '')
+	{
+	    $event = Event::scope()->findOrFail($event_id);
+	    $event->delete();
+	    return redirect()->route('showOrganiserEvents',$event->organiser->id);
+	}
+	public function restoreEvent($event_id = '')
+	{
+	    $event = Event::withTrashed()->scope()->findOrFail($event_id);
+	    $event->deleted_at = null;
+	    $event->save();
+	    return redirect()->route('showOrganiserEvents',$event->organiser->id);
+	}
 }
