@@ -9742,6 +9742,15 @@ $.cf = {
         $('input[name=sort_by]').val($(this).val()).closest('form').submit();
     });
 
+    /*
+     * Checkbox to filter view Archived Events trigger
+     */
+     $('#view_archived').click(function(){
+        // alert('aqui mismo es checkbox!');
+       $('#view_archived').val($(this).val()).closest('form').submit();
+    });
+
+
     /**
      * Custom file inputs
      */
