@@ -68,8 +68,10 @@ return array (
   'no' => 'No',
   'sales_volume' => 'Sales Volume',
   'search_placeholder' => 'Search Events..',
+  'see_archived_event' => 'See Archived Events',
   'select_an_organiser' => 'Select An Organiser',
   'select_organiser' => 'Select Organiser',
   'text_color' => 'Text Color',
   'tickets_sold' => 'Tickets Sold',
+  'warning_event_deleted' => 'EVENT DOES NOT EXIST; YOU NEED TO RESTORE FIRST',
 );
