@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Log;
@@ -10,6 +9,7 @@ use App\Models\Event;
 use App\Models\Organiser;
 use App\Models\EventImage;
 use App\Models\Ticket;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Spatie\GoogleCalendar\Event as GCEvent;
 
@@ -24,11 +24,8 @@ class EventController extends MyBaseController
     public function showCreateEvent(Request $request)
     {
 
-        $data = [
-            'modal_id'     => $request->get('modal_id'),
-            'organisers'   => Organiser::scope()->pluck('name', 'id'),
-            'organiser_id' => $request->get('organiser_id') ? $request->get('organiser_id') : false,
-        ];
+        $data = ['modal_id' => $request->get('modal_id') , 'organisers' => Organiser::scope()
+            ->pluck('name', 'id') , 'organiser_id' => $request->get('organiser_id') ? $request->get('organiser_id') : false, ];
 
         return view('ManageOrganiser.Modals.CreateEvent', $data);
     }
@@ -41,14 +38,13 @@ class EventController extends MyBaseController
      */
     public function postCreateEvent(Request $request)
     {
-		
+
         $event = Event::createNew();
 
-        if (!$event->validate($request->all())) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $event->errors(),
-            ]);
+        if (!$event->validate($request->all()))
+        {
+            return response()
+                ->json(['status' => 'error', 'messages' => $event->errors() , ]);
         }
 
         $event->title = $request->get('title');
@@ -57,11 +53,12 @@ class EventController extends MyBaseController
 
         /*
          * Venue location info (Usually auto-filled from google maps)
-         */
+        */
 
         $is_auto_address = (trim($request->get('place_id')) !== '');
 
-        if ($is_auto_address) { /* Google auto filled */
+        if ($is_auto_address)
+        { /* Google auto filled */
             $event->venue_name = $request->get('name');
             $event->venue_name_full = $request->get('venue_name_full');
             $event->location_lat = $request->get('lat');
@@ -76,7 +73,9 @@ class EventController extends MyBaseController
             $event->location_street_number = $request->get('street_number');
             $event->location_google_place_id = $request->get('place_id');
             $event->location_is_manual = 0;
-        } else { /* Manually entered */
+        }
+        else
+        { /* Manually entered */
             $event->venue_name = $request->get('location_venue_name');
             $event->location_address_line_1 = $request->get('location_address_line_1');
             $event->location_address_line_2 = $request->get('location_address_line_2');
@@ -87,33 +86,29 @@ class EventController extends MyBaseController
 
         $event->end_date = $request->get('end_date');
 
-        $event->currency_id = Auth::user()->account->currency_id;
+        $event->currency_id = Auth::user()
+            ->account->currency_id;
         //$event->timezone_id = Auth::user()->account->timezone_id;
         /*
          * Set a default background for the event
-         */
+        */
         $event->bg_type = 'image';
         $event->bg_image_path = config('attendize.event_default_bg_image');
 
-
-        if ($request->get('organiser_name')) {
+        if ($request->get('organiser_name'))
+        {
             $organiser = Organiser::createNew(false, false, true);
 
-            $rules = [
-                'organiser_name'  => ['required'],
-                'organiser_email' => ['required', 'email'],
-            ];
-            $messages = [
-                'organiser_name.required' => trans("Controllers.no_organiser_name_error"),
-            ];
+            $rules = ['organiser_name' => ['required'], 'organiser_email' => ['required', 'email'], ];
+            $messages = ['organiser_name.required' => trans("Controllers.no_organiser_name_error") , ];
 
-            $validator = Validator::make($request->all(), $rules, $messages);
+            $validator = Validator::make($request->all() , $rules, $messages);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+            if ($validator->fails())
+            {
+                return response()
+                    ->json(['status' => 'error', 'messages' => $validator->messages()
+                    ->toArray() , ]);
             }
 
             $organiser->name = $request->get('organiser_name');
@@ -123,21 +118,25 @@ class EventController extends MyBaseController
             $organiser->twitter = $request->get('organiser_twitter');
             $organiser->save();
             $event->organiser_id = $organiser->id;
-        } elseif ($request->get('organiser_id')) {
+        }
+        elseif ($request->get('organiser_id'))
+        {
             $event->organiser_id = $request->get('organiser_id');
-        } else { /* Somethings gone horribly wrong */
-            return response()->json([
-                'status'   => 'error',
-                'messages' => trans("Controllers.organiser_other_error"),
-            ]);
+        }
+        else
+        { /* Somethings gone horribly wrong */
+            return response()
+                ->json(['status' => 'error', 'messages' => trans("Controllers.organiser_other_error") , ]);
         }
 
         /*
          * Set the event defaults.
          * @todo these could do mass assigned
-         */
-        $defaults = $event->organiser->event_defaults;
-        if ($defaults) {
+        */
+        $defaults = $event
+            ->organiser->event_defaults;
+        if ($defaults)
+        {
             $event->organiser_fee_fixed = $defaults->organiser_fee_fixed;
             $event->organiser_fee_percentage = $defaults->organiser_fee_percentage;
             $event->pre_order_display_message = $defaults->pre_order_display_message;
@@ -157,29 +156,32 @@ class EventController extends MyBaseController
             $event->ticket_sub_text_color = $defaults->ticket_sub_text_color;
         }
 
-
-        try {
+        try
+        {
             $event->save();
-        } catch (\Exception $e) {
+        }
+        catch(\Exception $e)
+        {
             Log::error($e);
 
-            return response()->json([
-                'status'   => 'error',
-                'messages' => trans("Controllers.event_create_exception"),
-            ]);
+            return response()->json(['status' => 'error', 'messages' => trans("Controllers.event_create_exception") , ]);
         }
 
-        if ($request->hasFile('event_image')) {
+        if ($request->hasFile('event_image'))
+        {
             $path = public_path() . '/' . config('attendize.event_images_path');
-            $filename = 'event_image-' . md5(time() . $event->id) . '.' . strtolower($request->file('event_image')->getClientOriginalExtension());
+            $filename = 'event_image-' . md5(time() . $event->id) . '.' . strtolower($request->file('event_image')
+                ->getClientOriginalExtension());
 
             $file_full_path = $path . '/' . $filename;
 
-            $request->file('event_image')->move($path, $filename);
+            $request->file('event_image')
+                ->move($path, $filename);
 
             $img = Image::make($file_full_path);
 
-            $img->resize(800, null, function ($constraint) {
+            $img->resize(800, null, function ($constraint)
+            {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
@@ -195,14 +197,8 @@ class EventController extends MyBaseController
             $eventImage->save();
         }
 
-        return response()->json([
-            'status'      => 'success',
-            'id'          => $event->id,
-            'redirectUrl' => route('showEventTickets', [
-                'event_id'  => $event->id,
-                'first_run' => 'yup',
-            ]),
-        ]);
+        return response()
+            ->json(['status' => 'success', 'id' => $event->id, 'redirectUrl' => route('showEventTickets', ['event_id' => $event->id, 'first_run' => 'yup', ]) , ]);
     }
 
     /**
@@ -216,11 +212,10 @@ class EventController extends MyBaseController
     {
         $event = Event::scope()->findOrFail($event_id);
 
-        if (!$event->validate($request->all())) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $event->errors(),
-            ]);
+        if (!$event->validate($request->all()))
+        {
+            return response()
+                ->json(['status' => 'error', 'messages' => $event->errors() , ]);
         }
 
         $event->is_live = $request->get('is_live');
@@ -232,11 +227,13 @@ class EventController extends MyBaseController
 
         /*
          * If the google place ID is the same as before then don't update the venue
-         */
-        if (($request->get('place_id') !== $event->location_google_place_id) || $event->location_google_place_id == '') {
+        */
+        if (($request->get('place_id') !== $event->location_google_place_id) || $event->location_google_place_id == '')
+        {
             $is_auto_address = (trim($request->get('place_id')) !== '');
 
-            if ($is_auto_address) { /* Google auto filled */
+            if ($is_auto_address)
+            { /* Google auto filled */
                 $event->venue_name = $request->get('name');
                 $event->venue_name_full = $request->get('venue_name_full');
                 $event->location_lat = $request->get('lat');
@@ -251,7 +248,9 @@ class EventController extends MyBaseController
                 $event->location_street_number = $request->get('street_number');
                 $event->location_google_place_id = $request->get('place_id');
                 $event->location_is_manual = 0;
-            } else { /* Manually entered */
+            }
+            else
+            { /* Manually entered */
                 $event->venue_name = $request->get('location_venue_name');
                 $event->location_address_line_1 = $request->get('location_address_line_1');
                 $event->location_address_line_2 = $request->get('location_address_line_2');
@@ -272,23 +271,29 @@ class EventController extends MyBaseController
         $event->end_date = $request->get('end_date');
         $event->event_image_position = $request->get('event_image_position');
 
-        if ($request->get('remove_current_image') == '1') {
-            EventImage::where('event_id', '=', $event->id)->delete();
+        if ($request->get('remove_current_image') == '1')
+        {
+            EventImage::where('event_id', '=', $event->id)
+                ->delete();
         }
 
         $event->save();
 
-        if ($request->hasFile('event_image')) {
+        if ($request->hasFile('event_image'))
+        {
             $path = public_path() . '/' . config('attendize.event_images_path');
-            $filename = 'event_image-' . md5(time() . $event->id) . '.' . strtolower($request->file('event_image')->getClientOriginalExtension());
+            $filename = 'event_image-' . md5(time() . $event->id) . '.' . strtolower($request->file('event_image')
+                ->getClientOriginalExtension());
 
             $file_full_path = $path . '/' . $filename;
 
-            $request->file('event_image')->move($path, $filename);
+            $request->file('event_image')
+                ->move($path, $filename);
 
             $img = Image::make($file_full_path);
 
-            $img->resize(800, null, function ($constraint) {
+            $img->resize(800, null, function ($constraint)
+            {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
@@ -297,8 +302,7 @@ class EventController extends MyBaseController
 
             \Storage::put(config('attendize.event_images_path') . '/' . $filename, file_get_contents($file_full_path));
 
-            EventImage::where('event_id', '=', $event->id )->delete();
-
+            EventImage::where('event_id', '=', $event->id)->delete();
 
             $eventImage = EventImage::createNew();
             $eventImage->image_path = config('attendize.event_images_path') . '/' . $filename;
@@ -306,12 +310,8 @@ class EventController extends MyBaseController
             $eventImage->save();
         }
 
-        return response()->json([
-            'status'      => 'success',
-            'id'          => $event->id,
-            'message'     => trans("Controllers.event_successfully_updated"),
-            'redirectUrl' => '',
-        ]);
+        return response()
+            ->json(['status' => 'success', 'id' => $event->id, 'message' => trans("Controllers.event_successfully_updated") , 'redirectUrl' => '', ]);
     }
 
     /**
@@ -322,30 +322,31 @@ class EventController extends MyBaseController
      */
     public function postUploadEventImage(Request $request)
     {
-        if ($request->hasFile('event_image')) {
-            $the_file = \File::get($request->file('event_image')->getRealPath());
-            $file_name = 'event_details_image-' . md5(microtime()) . '.' . strtolower($request->file('event_image')->getClientOriginalExtension());
+        if ($request->hasFile('event_image'))
+        {
+            $the_file = \File::get($request->file('event_image')
+                ->getRealPath());
+            $file_name = 'event_details_image-' . md5(microtime()) . '.' . strtolower($request->file('event_image')
+                ->getClientOriginalExtension());
 
             $relative_path_to_file = config('attendize.event_images_path') . '/' . $file_name;
             $full_path_to_file = public_path() . '/' . $relative_path_to_file;
 
             $img = Image::make($the_file);
 
-            $img->resize(1000, null, function ($constraint) {
+            $img->resize(1000, null, function ($constraint)
+            {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
 
             $img->save($full_path_to_file);
-            if (\Storage::put($file_name, $the_file)) {
-                return response()->json([
-                    'link' => '/' . $relative_path_to_file,
-                ]);
+            if (\Storage::put($file_name, $the_file))
+            {
+                return response()->json(['link' => '/' . $relative_path_to_file, ]);
             }
 
-            return response()->json([
-                'error' => trans("Controllers.image_upload_error"),
-            ]);
+            return response()->json(['error' => trans("Controllers.image_upload_error") , ]);
         }
     }
 
@@ -354,18 +355,18 @@ class EventController extends MyBaseController
      * @param  Integer|false $event_id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function makeEventLive($event_id = false) {
+    public function makeEventLive($event_id = false)
+    {
         $event = Event::scope()->findOrFail($event_id);
         $event->is_live = 1;
         $event->save();
         \Session::flash('message', trans('Event.go_live'));
 
-        return redirect()->action(
-            'EventDashboardController@showDashboard', ['event_id' => $event_id]
-        );
+        return redirect()
+            ->action('EventDashboardController@showDashboard', ['event_id' => $event_id]);
     }
 
-     /**
+    /**
      * Clone an event
      *
      * @param Request $request
@@ -374,88 +375,116 @@ class EventController extends MyBaseController
      */
     public function CreateCloneEvent($event_id = '')
     {
-        
+
         /* need to prepare new dummy dates for new event */
         $format = config('attendize.default_datetime_format');
         //here you can set new event date as you like or repeat cloned event dates later in code as  = $event->start_date;
-        $fechaini     = date($format, strtotime(' + 7 days')); 
-        $fechafin     = date($format, strtotime(' + 9 days'));
-
+        $fechaini = date($format, strtotime(' + 7 days'));
+        $fechafin = date($format, strtotime(' + 9 days'));
 
         /* Create an empty Event */
-	 $cloned_event = Event::createNew();
+        $cloned_event = Event::createNew();
 
-	/* Clone event from choosen event_id (original) */
+        /* Clone event from choosen event_id (original) */
         $event = Event::scope()->findOrFail($event_id);
-        $cloned_event= clone $event;
-
+        $cloned_event = clone $event;
 
         /* Set values for the new Event */
-         $cloned_event->is_live = 0;
-         $cloned_event->id= null;
-         $cloned_event->title = $event->title.'(New)';
-         $cloned_event->start_date = $fechaini 	;
-         $cloned_event->end_date   = $fechafin	;
-         $cloned_event->exists = false; //very important so IsDirty returns correctly
+        $cloned_event->is_live = 0;
+        $cloned_event->id = null;
+        $cloned_event->title = $event->title . '(New)';
+        $cloned_event->start_date = $fechaini;
+        $cloned_event->end_date = $fechafin;
+        $cloned_event->exists = false; //very important so IsDirty returns correctly
+        
 
-
-
-         try {
-          $cloned_event->save();
-         } catch (\Exception $e) {
-              Log::error($e);
-              return response()->json([
-                'status'   => $e,
-                'messages' => trans("Controllers.event_create_exception"),
-            ]);
-         }
-
-    // now get images and duplicate them (thanks for a better code from @emergingdzns )
-    $images = EventImage::where('event_id',$event->id)->get();
-    if (count($images) > 0) {
-        foreach($images as $image) {
-            $newImage = new EventImage();
-            $newImage->image_path = $image->image_path;
-            $newImage->created_at = date('Y-m-d H:i:s');
-            $newImage->updated_at = date('Y-m-d H:i:s');
-            $newImage->event_id = $cloned_event->id;
-            $newImage->account_id = $image->account_id;
-            $newImage->user_id = $image->user_id;
-            $newImage->save();
+        try
+        {
+            $cloned_event->save();
         }
-    }
-    // now get tickets for the event and duplicate them
-      
-    $tickets = Ticket::where('event_id',$event->id)->get();
-    if (count($tickets) > 0) {
-        foreach($tickets as $ticket) {
-            $ticket = $ticket->toArray();
-            unset($ticket['id']);
-            $ticket['event_id'] = $cloned_event->id;
-            $ticket['quantity_sold'] = 0;
-            $ticket['sales_volume'] = 0.00;
-            $ticket['organiser_fees_volume'] = 0.00;
-            $newTicket = new Ticket();
-            $newTicket->fill($ticket);
-            $newTicket->save();
+        catch(\Exception $e)
+        {
+            Log::error($e);
+            return response()->json(['status' => $e, 'messages' => trans("Controllers.event_create_exception") , ]);
         }
-    }
 
-       /* redirect to wherever you want */
-	return redirect( route('showOrganiserEvents', array('organiser_id' => $cloned_event->organiser_id) )  );
+        // now get images and duplicate them (thanks for a better code from @emergingdzns )
+        $images = EventImage::where('event_id', $event->id)->get();
+        if (count($images) > 0)
+        {
+            foreach ($images as $image)
+            {
+                $newImage = new EventImage();
+                $newImage->image_path = $image->image_path;
+                $newImage->created_at = date('Y-m-d H:i:s');
+                $newImage->updated_at = date('Y-m-d H:i:s');
+                $newImage->event_id = $cloned_event->id;
+                $newImage->account_id = $image->account_id;
+                $newImage->user_id = $image->user_id;
+                $newImage->save();
+            }
+        }
+
+        // now get survey question for the event and associate them
+        $eventquestions = $event->questions()->get();
+        if (count($eventquestions) > 0)
+        {
+            foreach ($eventquestions as $question)
+            {
+                $cloned_event->questions()
+                    ->attach($question->id);
+            }
+        }
+
+        // now get tickets for the event and duplicate them
+        $tickets = Ticket::where('event_id', $event->id)->get();
+        if (count($tickets) > 0)
+        {
+
+            foreach ($tickets as $ticket)
+            {
+
+                $ticketa = $ticket->toArray();
+                unset($ticketa['id']);
+                $ticketa['event_id'] = $cloned_event->id;
+                $ticketa['quantity_sold'] = 0;
+                $ticketa['sales_volume'] = 0.00;
+                $ticketa['organiser_fees_volume'] = 0.00;
+
+                $newTicket = new Ticket();
+                $newTicket->fill($ticketa);
+                $newTicket->save();
+
+                if (count($eventquestions) > 0)
+                {
+                    foreach ($eventquestions as $question)
+                    {
+                        if (in_array($ticket->id, $question->tickets->pluck('id')->toArray()))
+                        {
+                            $question->tickets()->sync($newTicket->id);
+                        }
+                    }
+                }
+
+            }
+
+        }
+        /* redirect to wherever you want */
+        return redirect(route('showOrganiserEvents', array('organiser_id' => $cloned_event->organiser_id)));
 
     }
-	public function archiveEvent($event_id = '')
-	{
-	    $event = Event::scope()->findOrFail($event_id);
-	    $event->delete();
-	    return redirect()->route('showOrganiserEvents',$event->organiser->id);
-	}
-	public function restoreEvent($event_id = '')
-	{
-	    $event = Event::withTrashed()->scope()->findOrFail($event_id);
-	    $event->deleted_at = null;
-	    $event->save();
-	    return redirect()->route('showOrganiserEvents',$event->organiser->id);
-	}
+    public function archiveEvent($event_id = '')
+    {
+        $event = Event::scope()->findOrFail($event_id);
+        $event->delete();
+        return redirect()->route('showOrganiserEvents', $event->organiser->id);
+    }
+    public function restoreEvent($event_id = '')
+    {
+        $event = Event::withTrashed()->scope()
+            ->findOrFail($event_id);
+        $event->deleted_at = null;
+        $event->save();
+        return redirect()->route('showOrganiserEvents', $event->organiser->id);
+    }
 }
