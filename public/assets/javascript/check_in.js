@@ -94,6 +94,8 @@ var checkinApp = new Vue({
             var that = this;
             this.isScanning = true;
             this.scanResult = false;
+            
+
 
             /*
              If the scanner is already initiated clear it and start over.
@@ -129,11 +131,10 @@ var checkinApp = new Vue({
 
             navigator.mediaDevices.getUserMedia({
                 video: {
-                    facingMode: 'environment'
+                    facingMode: "environment" //TODO: Add switch to toggle "user" or "enviroment"
                 },
                 audio: false
-            }, function (stream) {
-
+            }).then(function(stream) {
                 that.stream = stream;
 
                 if (that.videoElement.mozSrcObject !== undefined) { // works on firefox now
@@ -141,16 +142,16 @@ var checkinApp = new Vue({
                 } else if(window.URL) { // and chrome, but must use https
                     that.videoElement.srcObject = stream;
                 };
-
-            }, function () { /* error*/
+            }).catch(function(err) {
+                console.log(err.name + ": " + err.message);
                 alert(lang("checkin_init_error"));
             });
 
             this.isInit = true;
             this.QrTimeout = setTimeout(function () {
                 that.captureQrToCanvas();
-            }, 500);
-
+            }, 1500);
+            
         },
         /**
          * Takes stills from the video stream and sends them to the canvas so
